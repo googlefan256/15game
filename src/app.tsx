@@ -2,8 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 
 function isPossible(grid: (number | null)[]) {
     let can = true;
-    if ([1, 3, 4, 6, 9, 11, 12, 14].includes(grid.findIndex((v) => v === 16)))
-        can = false;
+    if ([1, 3, 4, 6, 9, 11, 12, 14].includes(grid.findIndex((v) => v === 16))) can = false;
     for (let i = 0; i < 16; i++) {
         let num = grid.indexOf(i + 1);
         if (num === i) continue;
@@ -59,23 +58,23 @@ export function App() {
     return (
         <>
             <div className="flex flex-col items-center justify-center min-h-screen py-2">
-                <div class="flex flex-col justify-center items-center mb-4">
+                <div className="flex flex-col justify-center items-center mb-4">
                     <button
                         onClick={() => {
                             setGrid(randomizedDefault());
                             setIsStarted(false);
                         }}
-                        class="text-2xl bg-gray-500 text-white p-2 rounded-md shadow-md w-[20vw] md:w-[10vw] mb-2"
+                        className="text-2xl bg-gray-500 text-white p-2 rounded-md shadow-md w-[20vw] md:w-[10vw] mb-2"
                     >
                         Reset
                     </button>
                     {isStarted ? (
-                        <p class="text-2xl p-0">Time: {currentTimer}</p>
+                        <p className="text-2xl p-0">Time: {currentTimer}</p>
                     ) : (
-                        <p class="text-2xl p-0">Time: 0</p>
+                        <p className="text-2xl p-0">Time: 0</p>
                     )}
                 </div>
-                <div class="grid grid-rows-4 grid-cols-4 gap-2 md:gap-4">
+                <div className="grid grid-rows-4 grid-cols-4 gap-2 md:gap-4">
                     {grid.map((k, i) => (
                         <Card
                             key={i}
@@ -86,9 +85,7 @@ export function App() {
                                     setIsStarted(true);
                                 }
                                 const index = grid.findIndex((v) => v === k);
-                                const nullIndex = grid.findIndex(
-                                    (v) => v === null,
-                                );
+                                const nullIndex = grid.findIndex((v) => v === null);
                                 if (
                                     index === nullIndex - 1 ||
                                     index === nullIndex + 1 ||
@@ -115,20 +112,20 @@ function Card({
     children,
     visible,
     onClick,
-}: { children: number | null; visible: boolean; onClick?: () => void }) {
+}: {
+    children: number | null;
+    visible: boolean;
+    onClick?: () => void;
+}) {
     return (
         <>
             <div
-                class={`w-[90px] h-[90px] md:w-[150px] md:h-[150px] mx-auto ${
-                    visible
-                        ? "rounded-md shadow-md overflow-hidden bg-gray-500"
-                        : "bg-white"
+                className={`w-22.5 h-22.5 md:w-37.5 md:h-37.5 mx-auto ${
+                    visible ? "rounded-md shadow-md overflow-hidden bg-gray-500" : "bg-white"
                 } flex justify-center items-center`}
                 onClick={onClick}
             >
-                {visible && (
-                    <p class="text-3xl md:text-6xl text-white">{children}</p>
-                )}
+                {visible && <p className="text-3xl md:text-6xl text-white">{children}</p>}
             </div>
         </>
     );
