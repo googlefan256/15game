@@ -12,7 +12,6 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.3.3",
         "preact": "^10.29.8",
-        "preact-iso": "^2.12.2",
         "tailwindcss": "^4.3.3"
     },
     "devDependencies": {

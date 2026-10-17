@@ -7,7 +7,6 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         preact({
-            prerender: { enabled: true },
         }),
     ],
     esbuild: { legalComments: "none" },

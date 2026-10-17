@@ -14,9 +14,6 @@ importers:
       preact:
         specifier: ^10.29.8
         version: 10.29.8(preact-render-to-string@6.8.1)
-      preact-iso:
-        specifier: ^2.12.2
-        version: 2.12.2(preact-render-to-string@6.8.1)(preact@10.29.8)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -1191,12 +1188,6 @@ packages:
     resolution: {integrity: sha512-zkd+e9S1AQHhmaBKye9zlFHWjOwVgqXl1q3ECYy8561K7qxR2cREf/STLskulBFd78k6AOFeA+ff1TtEzk9bAA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact-iso@2.12.2:
-    resolution: {integrity: sha512-qit+qSMiZ41K0EQkLNa3MSxnWVCm5yXvy9m3CcGf/zF1QhVJzSwVCbpiz52VSbWpg8v8nYNIYDrXJZPNFpM1uw==}
-    peerDependencies:
-      preact: '>=10 || >= 11.0.0-0'
-      preact-render-to-string: '>=6.4.0'
-
   preact-render-to-string@6.8.1:
     resolution: {integrity: sha512-EIaLVlarET55f737gG/g1bK1UfjAgT3Z7Ch1Z7UX4/TwHh1O7EI5sCtwhVP+cs0n37SyV2HjZCSRtrpMm4Bujw==}
     peerDependencies:
@@ -2143,14 +2134,10 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  preact-iso@2.12.2(preact-render-to-string@6.8.1)(preact@10.29.8):
-    dependencies:
-      preact: 10.29.8(preact-render-to-string@6.8.1)
-      preact-render-to-string: 6.8.1(preact@10.29.8)
-
   preact-render-to-string@6.8.1(preact@10.29.8):
     dependencies:
       preact: 10.29.8(preact-render-to-string@6.8.1)
+    optional: true
 
   preact@10.29.8(preact-render-to-string@6.8.1):
     optionalDependencies:
