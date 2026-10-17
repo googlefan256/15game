@@ -29,32 +29,38 @@ function randomizedDefault() {
     });
 }
 
+function solvedDefault() {
+    return Array.from({ length: 16 }).map((_, i) => (i === 15 ? null : i + 1));
+}
+
+const isDebug =
+    typeof location !== "undefined" && new URLSearchParams(location.search).has("debug");
+
 export function App() {
     const [grid, setGrid] = useState(randomizedDefault());
     const [startTime, setStartTime] = useState(Date.now());
-    const [isStarted, setIsStarted] = useState(false);
+    const [hasStarted, setHasStarted] = useState(false);
     const [currentTimer, setCurrentTimer] = useState(0);
+    const [clearTimeString, setClearTimeString] = useState<string | null>(null);
     useEffect(() => {
         const isComplete = grid.every((v, i) => {
             if (v === null) return i === 15;
             return v === i + 1;
         });
         if (isComplete) {
-            let seconds = (Date.now() - startTime) / 1000;
-            let minutes = Math.floor(seconds / 60);
-            seconds = seconds % 60;
-            alert(`You won! Your clear time is ${minutes}:${seconds}!`);
-            setGrid(randomizedDefault());
-            setIsStarted(false);
+            const seconds = (Date.now() - startTime) / 1000;
+            const minutes = Math.floor(seconds / 60);
+            setClearTimeString(`${minutes}:${Math.floor((1000 * seconds) % 60) / 1000}`);
+            setHasStarted(false);
         }
     }, [grid]);
     useEffect(() => {
-        if (!isStarted) return;
+        if (!hasStarted) return;
         const interval = setInterval(() => {
-            setCurrentTimer((Date.now() - startTime) / 1000);
+            setCurrentTimer(Math.floor(Date.now() - startTime) / 1000);
         }, 20);
         return () => clearInterval(interval);
-    }, [isStarted]);
+    }, [hasStarted]);
     return (
         <>
             <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -62,46 +68,67 @@ export function App() {
                     <button
                         onClick={() => {
                             setGrid(randomizedDefault());
-                            setIsStarted(false);
+                            setHasStarted(false);
+                            setClearTimeString(null);
                         }}
                         className="text-2xl bg-gray-500 text-white p-2 rounded-md shadow-md w-[20vw] md:w-[10vw] mb-2"
                     >
                         Reset
                     </button>
-                    {isStarted ? (
-                        <p className="text-2xl p-0">Time: {currentTimer}</p>
-                    ) : (
-                        <p className="text-2xl p-0">Time: 0</p>
-                    )}
-                </div>
-                <div className="grid grid-rows-4 grid-cols-4 gap-2 md:gap-4">
-                    {grid.map((k, i) => (
-                        <Card
-                            key={i}
-                            visible={k !== null}
-                            onClick={() => {
-                                if (!isStarted) {
-                                    setStartTime(Date.now());
-                                    setIsStarted(true);
-                                }
-                                const index = grid.findIndex((v) => v === k);
-                                const nullIndex = grid.findIndex((v) => v === null);
-                                if (
-                                    index === nullIndex - 1 ||
-                                    index === nullIndex + 1 ||
-                                    index === nullIndex - 4 ||
-                                    index === nullIndex + 4
-                                ) {
-                                    const newGrid = [...grid];
-                                    newGrid[index] = null;
-                                    newGrid[nullIndex] = k;
-                                    setGrid(newGrid);
-                                }
-                            }}
+                    {isDebug && (
+                        <button
+                            onClick={() => setGrid(solvedDefault())}
+                            className="text-2xl bg-red-500 text-white p-2 rounded-md shadow-md w-[20vw] md:w-[10vw] mb-2"
                         >
-                            {k}
-                        </Card>
-                    ))}
+                            Solve now
+                        </button>
+                    )}
+                    <p className="text-2xl p-0">Time: {hasStarted ? currentTimer : 0}</p>
+                </div>
+                <div className="relative">
+                    {clearTimeString && (
+                        <div className="absolute inset-0 z-10 flex flex-col justify-center items-center">
+                            <div className="rounded-md bg-gray-200 p-2">
+                                <p className="text-3xl font-bold text-gray-800">You won!</p>
+                                <p className="text-xl text-gray-800">
+                                    Your clear time is {clearTimeString}!
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    <div className="grid grid-rows-4 grid-cols-4 gap-2 md:gap-4">
+                        {grid.map((k, i) => (
+                            <Card
+                                key={i}
+                                visible={k !== null}
+                                onClick={() => {
+                                    if (clearTimeString) return;
+                                    const index = grid.findIndex((v) => v === k);
+                                    const nullIndex = grid.findIndex((v) => v === null);
+                                    const row = Math.floor(index / 4);
+                                    const col = index % 4;
+                                    const nullRow = Math.floor(nullIndex / 4);
+                                    const nullCol = nullIndex % 4;
+                                    const isAdjacent =
+                                        (row === nullRow && Math.abs(col - nullCol) === 1) ||
+                                        (col === nullCol && Math.abs(row - nullRow) === 1);
+                                    if (isAdjacent) {
+                                        if (!hasStarted) {
+                                            setStartTime(Date.now());
+                                            setHasStarted(true);
+                                            setClearTimeString(null);
+                                        }
+                                        const newGrid = [...grid];
+                                        newGrid[index] = null;
+                                        newGrid[nullIndex] = k;
+                                        setGrid(newGrid);
+                                    }
+                                }}
+                            >
+                                {k}
+                            </Card>
+                        ))}
+                    </div>
                 </div>
             </div>
         </>

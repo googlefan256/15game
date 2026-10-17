@@ -4,10 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 import preact from "@preact/preset-vite";
 
 export default defineConfig({
-    plugins: [
-        tailwindcss(),
-        preact({
-        }),
-    ],
+    plugins: [tailwindcss(), preact()],
     esbuild: { legalComments: "none" },
 });
